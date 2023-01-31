@@ -1,5 +1,5 @@
-let products = {
-    1: {
+let products = [
+    {
         id: 1234,
         name: 'Тапочки',
         description: 'Мягкие, удобные домашние тапочки',
@@ -7,7 +7,7 @@ let products = {
         price: 3,
         available: true,
     },
-    2: {
+    {
         id: 6437437,
         name: 'Футболка',
         description: 'Классическая белая футболка',
@@ -15,7 +15,7 @@ let products = {
         price: 5,
         available: true,
     },
-    3: {
+    {
         id: 2543733,
         name: 'Пижама',
         description: 'Комплект из футболки и лёгких брюк для сна',
@@ -23,7 +23,7 @@ let products = {
         price: 13,
         available: true,
     },
-    4: {
+    {
         id: 26437882,
         name: 'Шляпа',
         description: 'Мужская шляпа с высокими бортами',
@@ -31,7 +31,7 @@ let products = {
         price: 20,
         available: true,
     },
-    5: {
+    {
         id: 13273548,
         name: 'Трусы',
         description: 'Романтические трусы с сердечками',
@@ -39,41 +39,33 @@ let products = {
         price: 7,
         available: true,
     },
-}
-
-let cart = [
-    [1, 3],
-    [3, 1],
 ]
 
-function addToCart(productId, amount) {
+let cart = [
+    {good: 1234, amount: 3},
+    {good: 2543733, amount: 1},
+]
+
+function addToCart(productId, productAmount) {
     let matchCount = 0;
     for (let count = 0; count < cart.length; count++) {
-        if (cart[count][0] == productId) {
-            cart[count] == [productId, cart[count][1] + amount];
+        if (cart[count].good == productId) {
+            cart[count] == {good: productId, amount: cart[count].amount + productAmount};
             matchCount++;
         }
     }
     if (matchCount == 0) {
-        cart.push([productId, amount]);
+        cart.push({good: productId, amount: productAmount});
     }
 }
 
 function deleteFromCart(cartProductId) {
     for (let count = 0; count < cart.length; count++) {
-        if (cart[count][0] == cartProductId) {
+        if (cart[count].good == cartProductId) {
             cart.splice(count, 1);
         }
     }
 }
-
-// function decreaseCartPositionAmount(positionIndex) {
-//     cart[positionIndex] = [cart[positionIndex][0], cart[positionIndex][1] - 1];
-// }
-
-// function increaseCartPositionAmount(positionIndex) {
-//     cart[positionIndex] = [cart[positionIndex][0], cart[positionIndex][1] + 1];
-// }
 
 function resetCart() {
     cart.length = 0;
@@ -82,26 +74,30 @@ function resetCart() {
 function cartTotal() {
     let totalAmount = 0;
     let totalSumm = 0;
+    let goodSumm = 0
     for (let count = 0; count < cart.length; count++) {
-        totalAmount = totalAmount + cart[count][1];
-        totalSumm = totalSumm + products[cart[count][0]].price;
+        for (let counter = 0; counter < products.length; counter++) {
+            if (products[counter].id == cart[count].good) {
+                goodSumm = products[counter].price * cart[count].amount;
+            }
+        }
+        totalAmount = totalAmount + cart[count].amount;
+        totalSumm = totalSumm + goodSumm;
     }
     const result = `totalAmount = ${totalAmount}\ntotalSumm = ${totalSumm}`
 
     return result
 }
 
-addToCart(3, 6)
-addToCart(4, 2)
-deleteFromCart(4)
-addToCart(4, 2)
+addToCart(2543733, 6)
+addToCart(26437882, 2)
+deleteFromCart(26437882)
+addToCart(26437882, 2)
 deleteFromCart(3)
-addToCart(5, 10)
-addToCart(2, 1)
+addToCart(13273548, 10)
+addToCart(6437437, 1)
 resetCart()
-addToCart(3, 6)
-addToCart(4, 2)
-// increaseCartPositionAmount(1)
-// increaseCartPositionAmount(1)
-// decreaseCartPositionAmount(0)
+addToCart(2543733, 6)
+addToCart(26437882, 2)
 console.log(cartTotal())
+console.log(cart)
